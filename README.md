@@ -65,10 +65,10 @@ Forbidden
 ```
 
 ## Considerations
-Certain design choices where made to simplify development and time constraints which should be addressed in a production environment.
+Certain design choices were made to simplify development and time constraints which should be addressed in a production environment.
 
-- The Node.js auth-service uses an in memory lookup map associating `project_id` to `user_id` and `k8_service`. This should be replaced with an external production ready database server such as postgres. This will enable the application to perform dynamically when this data is modified. For example assigning a new user a worker.
-- In order to reduce complexity no custom scripting takes place within the Nginx ingress controller meaning that all requests are proxied through the Node.js service to reach their destination. This has a lot of performance considerations given the Node.js service must be able to standup to the full amount of traffic passing through to the workers.
+- The Node.js auth-service uses an in-memory lookup map associating `project_id` to `user_id` and `k8_service`. This should be replaced with an external production ready database server such as postgres. This will enable the application to perform dynamically when this data is modified. For example assigning a new user a worker.
+- In order to reduce complexity no custom scripting takes place within the Nginx ingress controller meaning that all requests are proxied through the Node.js service to reach their destination. This has a lot of performance considerations given the Node.js service must be able to stand-up to the full amount of traffic passing through to the workers.
 - In a production scenario using a cluster of Node.js instances behind a load balancer makes sense to handle scaling requirements.
 - Routing within the ingress controller would undoubtedly be more efficient. The Node.js service could be called externally and return the route to the ingress controller or performing the routing or performing the JWT validation/parsing and route lookup within the ingress controller could be possible through extending Nginx with lua scripting or possibly another open source ingress controller which has greater customization through scripting. Given more time additional ingress controllers could be investigated and tested.
 - If the decision to do the full request proxying in the auth-service middleware is made for production it's worth considering other languages for performance reasons like golang for example.
